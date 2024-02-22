@@ -23,8 +23,8 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <h1>S13 List</h1>
+      <div>
+        <h1>Administrator dashboard</h1>
         <u1>
           {s13.map(event => (
             <li key={event.id}>{event.fh}</li>
