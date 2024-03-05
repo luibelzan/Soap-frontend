@@ -5,6 +5,8 @@ import * as Yup from 'yup';
 
 export default function Equipment() {
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
       const formik = useFormik({
         initialValues: {
           idEquip: '',
@@ -23,7 +25,7 @@ export default function Equipment() {
           idCt: Yup.string().required('La descripción es obligatoria').matches(/^CT-/, 'This field must match Trf-'), 
           idDist: Yup.string().required('La descripción es obligatoria'),
         }),
-        onSubmit: values => {
+        onSubmit: async (values, { setSubmitting }) => {
           try {
             const res = fetch('/api/equipment', {
               method: 'POST',
@@ -32,12 +34,12 @@ export default function Equipment() {
               },
               body: JSON.stringify(values)
             });
-            comsole.log('Succesfully inserted')
+            console.log('Succesfully inserted')
+            setIsSubmitted(true);
           } catch(error) {
             console.error('Error during insertion')
           }
-          
-
+          setSubmitting(false);
           },
       });
     
@@ -154,6 +156,9 @@ export default function Equipment() {
                         <div id='error'>{formik.errors.idDist}</div>
                         ) : null}
                     </div>
+
+
+                    {isSubmitted && <p>Equipment Succesfully created</p>}
                     <button type="submit">Submit</button>
           </form>
         </div>
