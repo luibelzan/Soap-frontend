@@ -4,29 +4,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 export default function Equipment() {
-    const [datos, setDatos] = useState({
-        idEquip: '',
-        tipEquip: '',
-        nomEquip: '',
-        idLin: undefined,
-        idTrafo: '',
-        idCt: '',
-        idDist: '',
-        // Añade más campos según sea necesario
-      });
-    
-    
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        const res = await fetch('/api/equipment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(e)
-        });
-        console.log(datos);
-      };
 
       const formik = useFormik({
         initialValues: {
