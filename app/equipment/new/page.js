@@ -39,21 +39,27 @@ export default function Equipment() {
           idDist: '',
         },
         validationSchema: Yup.object({
-          idEquip: Yup.string().required('El nombre es obligatorio'),
-          tipEquip: Yup.string().required('La descripción es obligatoria'),
+          idEquip: Yup.string().required('El nombre es obligatorio').matches(/^(CIRN|CIRR|SAG0)/, 'This field must match CIRN, CIRR OR SAG0'),
+          tipEquip: Yup.string().required('La descripción es obligatoria').matches(/^(SABT|VTN|DC)/, 'This field must match SABT, VTN or DC').required('El campo idEquip es obligatorio'),
           nomEquip: Yup.string().required('La descripción es obligatoria'),
-          idTrafo: Yup.string().required('La descripción es obligatoria'), 
-          idCt: Yup.string().required('La descripción es obligatoria'),
+          idTrafo: Yup.string().required('La descripción es obligatoria').matches(/^Trf-/, 'This field must match Trf-'), 
+          idCt: Yup.string().required('La descripción es obligatoria').matches(/^CT-/, 'This field must match Trf-'), 
           idDist: Yup.string().required('La descripción es obligatoria'),
         }),
         onSubmit: values => {
-          const res = fetch('/api/equipment', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(values)
-          });
+          try {
+            const res = fetch('/api/equipment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(values)
+            });
+            comsole.log('Succesfully inserted')
+          } catch(error) {
+            console.error('Error during insertion')
+          }
+          
 
           },
       });
@@ -79,17 +85,22 @@ export default function Equipment() {
 
             <div>
                         <label htmlFor="tipEquip">tipEquip</label>
-                        <input
-                        id="tipEquip"
-                        name="tipEquip"
-                        type="text"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.tipEquip}
-                        />
+                        <select
+                          name="tipEquip"
+                          value={formik.values.tipEquip}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          style={{ display: "block" }}
+                        >
+                          <option value="" label="Select a type"></option>
+                          <option value="VTN" label="VTN"></option>
+                          <option value="SABT" label="SABT"></option>
+                          <option value="DC" label="DC"></option>
+                        </select>
                         {formik.touched.tipEquip && formik.errors.tipEquip ? (
                         <div id='error'>{formik.errors.tipEquip}</div>
                         ) : null}
+
                     </div>
 
                     <div>
@@ -157,7 +168,7 @@ export default function Equipment() {
                         <input
                         id="idDist"
                         name="idDist"
-                        type="text"
+                        type="number"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.idDist}
