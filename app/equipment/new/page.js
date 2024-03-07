@@ -27,7 +27,7 @@ export default function Equipment() {
         }),
         onSubmit: async (values, { setSubmitting }) => {
           try {
-            const res = fetch('/api/equipment', {
+            const res = fetch('/api/newEquipment', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'

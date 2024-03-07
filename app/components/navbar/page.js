@@ -37,6 +37,11 @@ export default function Navbar() {
                                 <p>S65 Events</p>
                             </Link>
                         </li>
+                        <li>
+                            <Link href="/equipment">
+                                <p>Equipments</p>
+                            </Link>
+                        </li>
                     </ul>  
             </div>
         </div>
