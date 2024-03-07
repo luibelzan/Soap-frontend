@@ -9,7 +9,7 @@ export default function Equipmet() {
     useEffect(() => {
         async function fetchEquips() {
             try {
-                const res = await fetch('/api/newEquipment');
+                const res = await fetch('/api/getAllEquips');
                 const data = await res.json();
                 setEquip(data);
             } catch(error) {

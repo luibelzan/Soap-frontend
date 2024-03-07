@@ -19,7 +19,7 @@ export default function Equipment() {
         },
         validationSchema: Yup.object({
           idEquip: Yup.string().required('El nombre es obligatorio').matches(/^(CIRN|CIRR|SAG0)/, 'This field must match CIRN, CIRR OR SAG0'),
-          tipEquip: Yup.string().required('La descripción es obligatoria').matches(/^(SABT|VTN|DC)/, 'This field must match SABT, VTN or DC').required('El campo idEquip es obligatorio'),
+          tipEquip: Yup.string().required('La descripción es obligatoria').matches(/^(SABT|VTN|DC)/, 'This field must match SABT, VTN or DC'),
           nomEquip: Yup.string().required('La descripción es obligatoria'),
           idTrafo: Yup.string().required('La descripción es obligatoria').matches(/^Trf-/, 'This field must match Trf-'), 
           idCt: Yup.string().required('La descripción es obligatoria').matches(/^CT-/, 'This field must match Trf-'), 
@@ -27,7 +27,7 @@ export default function Equipment() {
         }),
         onSubmit: async (values, { setSubmitting }) => {
           try {
-            const res = fetch('/api/newEquipment', {
+            const res = fetch('/api/insertEquip', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
