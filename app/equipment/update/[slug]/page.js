@@ -11,8 +11,7 @@ export default function EquipmentUpdate() {
 
     const path = usePathname();
     const query = path.split('/').pop();
-    const objetoJSON = { id: query };
-    //console.log(objetoJSON)
+    const objetoJSON = { idEquip: query };
 
     useEffect(() => {
         async function fetchEquip() {
@@ -38,7 +37,6 @@ export default function EquipmentUpdate() {
 
     const formik = useFormik({
         initialValues: {
-          idEquip: '',
           tipEquip: '',
           nomEquip: '',
           idLin: undefined,
@@ -47,7 +45,6 @@ export default function EquipmentUpdate() {
           idDist: '',
         },
         validationSchema: Yup.object({
-          idEquip: Yup.string().required('El nombre es obligatorio').matches(/^(CIRN|CIRR|SAG0)/, 'This field must match CIRN, CIRR OR SAG0'),
           tipEquip: Yup.string().required('La descripción es obligatoria').matches(/^(SABT|VTN|DC)/, 'This field must match SABT, VTN or DC'),
           nomEquip: Yup.string().required('La descripción es obligatoria'),
           idTrafo: Yup.string().required('La descripción es obligatoria').matches(/^Trf-/, 'This field must match Trf-'), 
@@ -55,13 +52,14 @@ export default function EquipmentUpdate() {
           idDist: Yup.string().required('La descripción es obligatoria'),
         }),
         onSubmit: async (values, { setSubmitting }) => {
+          const concatenatedJSON = { ...objetoJSON, ...values };
           try {
             const res = fetch('/api/updateEquip', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
               },
-              body: JSON.stringify(values)
+              body: JSON.stringify(concatenatedJSON)
             });
             console.log('Succesfully updated')
             setIsSubmitted(true);
@@ -77,22 +75,6 @@ export default function EquipmentUpdate() {
           {equip && (
         <div>
           <form onSubmit={formik.handleSubmit}>
-            <div>
-              <label htmlFor="idEquip">Id Equip</label>
-                        <input
-                        id="idEquip"
-                        name="idEquip"
-                        type="text"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.idEquip}
-                        placeholder={equip[0].id_equipo}
-                        />
-                        {formik.touched.idEquip && formik.errors.idEquip ? (
-                        <div id='error'>{formik.errors.idEquip}</div>
-                        ) : null}
-            </div>
-
             <div>
                         <label htmlFor="tipEquip">tipEquip</label>
                         <select
@@ -194,7 +176,7 @@ export default function EquipmentUpdate() {
                     </div>
 
 
-                    {isSubmitted && <p>Equipment Succesfully created</p>}
+                    {isSubmitted && <p>Equipment Succesfully updated</p>}
                     <button type="submit">Submit</button>
           </form>
         </div>
