@@ -1,11 +1,30 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 export default function Equipment() {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [cts, setCts] = useState([]);
+  const [dists, setDists] = useState([]);
+  const [trafos, setTrafos] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+          const res = await fetch('/api/ct/getAllCts');
+          const res2 = await fetch('/api/distributors/getAllDist');
+          const res3 = await fetch('/api/trafos/getAllTrafos');
+          setCts(await res.json());
+          setDists(await res2.json());
+          setTrafos(await res3.json());
+      } catch(error) {
+          console.error('Error: ', error);
+      }
+  }
+  fetchData();
+  },[])
 
       const formik = useFormik({
         initialValues: {
@@ -21,13 +40,19 @@ export default function Equipment() {
           idEquip: Yup.string().required('El nombre es obligatorio').matches(/^(CIRN|CIRR|SAG0)/, 'This field must match CIRN, CIRR OR SAG0'),
           tipEquip: Yup.string().required('La descripción es obligatoria').matches(/^(SABT|VTN|DC)/, 'This field must match SABT, VTN or DC'),
           nomEquip: Yup.string().required('La descripción es obligatoria'),
-          idTrafo: Yup.string().required('La descripción es obligatoria').matches(/^Trf-/, 'This field must match Trf-'), 
-          idCt: Yup.string().required('La descripción es obligatoria').matches(/^CT-/, 'This field must match Trf-'), 
-          idDist: Yup.string().required('La descripción es obligatoria'),
+          idTrafo: Yup.string().required('La descripción es obligatoria').matches(/^Trf-/, 'This field must match Trf-').test('idTrafo-valid', 'This Id_Trafo doesnt exist', async(value) => {
+            return trafos.some(trafo => trafo.id_trafo === value)
+          }), 
+          idCt: Yup.string().required('La descripción es obligatoria').matches(/^CT-/, 'This field must match Trf-').test('idCt-valid', 'This Id_Ct doesnt exist', async(value) => {
+            return cts.some(ct => ct.id_ct === value)
+          }), 
+          idDist: Yup.number().required('La descripción es obligatoria').test('idDist-valid', 'This Id_Dist doesnt exist', async(value) => {
+            return dists.some(dist => dist.id_distribuidora === value)
+          }),
         }),
         onSubmit: async (values, { setSubmitting }) => {
           try {
-            const res = fetch('/api/insertEquip', {
+            const res = fetch('/api/equipment/insertEquip', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'

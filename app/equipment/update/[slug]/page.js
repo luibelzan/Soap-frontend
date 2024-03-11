@@ -16,7 +16,7 @@ export default function EquipmentUpdate() {
     useEffect(() => {
         async function fetchEquip() {
             try {
-                const res = await fetch('/api/findEquipById', {
+                const res = await fetch('/api/equipment/findEquipById', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
