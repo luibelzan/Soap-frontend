@@ -42,7 +42,7 @@ export default function EquipmentUpdate() {
     }, []);
 
     const [isSubmitted, setIsSubmitted] = useState(false);
-    //console.log(equip[0].id_equipo);
+    console.log(dists);
 
     const formik = useFormik({
         initialValues: {
@@ -63,7 +63,7 @@ export default function EquipmentUpdate() {
             return cts.some(ct => ct.id_ct === value)
           }), 
           idDist: Yup.string().required('La descripción es obligatoria').test('idDist-valid', 'This Id_Dist doesnt exist', async(value) => {
-            return dists.some(dist => dist.id_distribuidora === value)
+            return dists.some(dist => dist.id_distribuidora == value)
           }),
         }),
         onSubmit: async (values, { setSubmitting }) => {
